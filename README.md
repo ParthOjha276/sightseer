@@ -1,5 +1,7 @@
 # Sightseer
 
+**Live: https://sightseer-gilt.vercel.app/**
+
 Trip weather, turned into a decision. Enter a city and your travel dates; get a
 plain-language verdict for each day, the hours of that day worth being outside,
 and one packing list for the whole trip.
@@ -28,17 +30,11 @@ Opening `index.html` directly from the filesystem also works.
 
 ## Deploying
 
-Static files, but do not drag the whole folder anywhere: it contains the task
-PDF, the submission note and local tooling. Run
+Deployed on Vercel from this repo. `vercel.json` runs `deploy.sh`, which copies
+the five things the site needs into `dist/`, and serves that — so the note, the
+tests and the task PDF are never published.
 
-```sh
-./deploy.sh
-```
-
-which writes `dist/` (the five things the site actually needs) and
-`sightseer-site.zip`. Drop the zip on [Netlify Drop](https://app.netlify.com/drop),
-or point Cloudflare Pages / Vercel / GitHub Pages at the repo with the publish
-directory set to `dist`. Nothing else to configure.
+Any static host works the same way: build with `./deploy.sh`, serve `dist/`.
 
 ## Files
 
