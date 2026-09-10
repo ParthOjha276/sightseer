@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sightseer: trip weather, turned into a decision</title>
+<meta name="description" content="Enter a city and your travel dates. Get a plain-language verdict for each day and one packing list for the trip.">
+<meta name="color-scheme" content="light dark">
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F5E4B' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s7.2-7.2 7.2-12.7A7.2 7.2 0 0 0 4.8 9.3C4.8 14.8 12 22 12 22z' stroke-width='1.9'/><circle cx='12.5' cy='5.9' r='1.25' fill='%231F5E4B' stroke='none'/><path d='M12.7 8 11 11.2l1.9 1.3.3 3' stroke-width='1.5'/><path d='M11 11.2 8.9 12.8 8.3 15.5' stroke-width='1.5'/></svg>">
+</head>
+<body>
+
+<a class="skip" href="#panel">Skip to results</a>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 22s7.2-7.2 7.2-12.7A7.2 7.2 0 0 0 4.8 9.3C4.8 14.8 12 22 12 22z" stroke-width="1.9"/>
+        <circle cx="12.5" cy="5.9" r="1.25" fill="currentColor" stroke="none"/>
+        <path d="M12.7 8 11 11.2l1.9 1.3.3 3" stroke-width="1.5"/>
+        <path d="M11 11.2 8.9 12.8 8.3 15.5" stroke-width="1.5"/>
+      </svg>
+      <h1>Sightseer</h1>
+    </div>
+    <p class="tagline">
+      Your forecast, turned into a decision. <strong>Travel between sights however
+      you like, see them on foot</strong>: 5–8&nbsp;km a day, 9am to 7pm.
+    </p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ── Search ─────────────────────────────────────────────────────── -->
+  <form id="search" class="search" novalidate>
+    <div class="field field-city">
+      <label for="city">City</label>
+      <input id="city" name="city" type="text" autocomplete="address-level2" spellcheck="false"
+             autocapitalize="words" enterkeyhint="search"
+             placeholder="Jaipur, New Delhi, Springfield…" required>
+    </div>
+    <div class="field">
+      <label for="start">First day</label>
+      <input id="start" name="start" type="date" required>
+    </div>
+    <div class="field">
+      <label for="end">Last day</label>
+      <input id="end" name="end" type="date" required>
+    </div>
+    <button type="submit" id="go">Get the verdict</button>
+    <p id="formError" class="form-error" role="alert" hidden></p>
+    <p class="field-note">Forecasts run up to 14 days ahead.</p>
+  </form>
+
+  <!-- State changes reach assistive tech through this one line, not by making
+       the whole panel a live region. -->
+  <p id="status" class="sr-only" role="status"></p>
+
+  <!-- ── The one panel that swaps between all five states ───────────── -->
+  <section id="panel" aria-busy="false">
+
+    <!-- 1. EMPTY ---------------------------------------------------- -->
+    <div class="state" id="stateEmpty">
+      <div class="empty">
+        <p class="empty-lead">Where are you going?</p>
+        <p class="empty-body">
+          Most weather apps hand you a wall of numbers and leave the thinking to
+          you. This one reads the forecast for your exact dates and tells you
+          two things: whether each day is worth being outside, and what to pack
+          for the trip as a whole.
+        </p>
+        <ul class="empty-list">
+          <li>A verdict for each day, in one sentence</li>
+          <li>Which hours are worth being outside, not just whether it might rain</li>
+          <li>One packing list for the whole trip, deduplicated</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. LOADING -------------------------------------------------- -->
+    <div class="state" id="stateLoading" hidden>
+      <div class="loading">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="loadingMsg">Finding that city…</p>
+      </div>
+      <div class="skeleton-summary" aria-hidden="true"></div>
+      <div class="skeleton-grid" id="skeletonGrid" aria-hidden="true">
+        <div class="skeleton-card"></div><div class="skeleton-card"></div>
+        <div class="skeleton-card"></div><div class="skeleton-card"></div>
+      </div>
+    </div>
+
+    <!-- 3. DISAMBIGUATION ------------------------------------------- -->
+    <div class="state" id="stateChoose" hidden>
+      <h2 class="state-title">Which one did you mean?</h2>
+      <p class="state-sub" id="chooseSub"></p>
+      <ul class="choices" id="choices"></ul>
+      <button type="button" class="link-btn" id="chooseCancel">Search for a different city</button>
+    </div>
+
+    <!-- 4. ERROR ---------------------------------------------------- -->
+    <div class="state" id="stateError" hidden>
+      <div class="errorbox" role="alert">
+        <p class="error-title" id="errorTitle">Something went wrong</p>
+        <p class="error-body" id="errorBody"></p>
+        <button type="button" id="retry" class="btn-secondary">Try again</button>
+      </div>
+    </div>
+
+    <!-- 5. RESULTS -------------------------------------------------- -->
+    <div class="state" id="stateResults" hidden>
+      <div class="summary" id="summary">
+        <p class="summary-place" id="summaryPlace"></p>
+        <p class="summary-line" id="summaryLine"></p>
+        <p class="summary-best" id="summaryBest"></p>
+        <div class="trip-strip" id="tripStrip" role="group" aria-label="Jump to a day" hidden></div>
+      </div>
+
+      <h2 class="section-title">Day by day</h2>
+      <div class="days" id="days"></div>
+
+      <section class="packing">
+        <h2 class="section-title">Pack for this trip</h2>
+        <p class="packing-intro">
+          One list for the whole trip. Every line is here because something in
+          <em>your</em> forecast put it there.
+        </p>
+        <ul class="pack-list" id="packList"></ul>
+        <p class="pack-base-label">Because you're on foot</p>
+        <ul class="pack-list pack-base" id="packBase"></ul>
+      </section>
+
+      <details class="method">
+        <summary>
+          <svg class="method-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4.5 2.5 8 6l-3.5 3.5"/>
+          </svg>
+          How this verdict was made
+        </summary>
+        <div class="method-body">
+          <p>
+            Each day is scored on five signals. The worst one becomes the
+            sentence; the rest drop to the smaller tags. When several tie, this
+            is the order that wins:
+          </p>
+          <p class="priority" id="priority"></p>
+          <p class="method-why">
+            Rain and thermal stress change <em>whether you go out</em>. Wind and
+            sun change <em>what you wear</em>. The headline belongs to whichever
+            changes the bigger decision.
+          </p>
+          <table class="thresholds" id="thresholds">
+            <thead><tr><th>Signal</th><th>Worth a mention</th><th>Serious</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <p class="method-why">
+            Rain falling outside 9am–7pm is scored one level lower than the same
+            rain during the day. A 90% chance at 3am is not your problem.
+          </p>
+          <p>
+            The same numbers are then read hour by hour, inside whichever part of
+            9am–7pm is actually daylight, to work out which hours are worth being
+            outside. Only rain and temperature can close an hour, for the reason
+            above: wind and sun change what you wear, not whether you go.
+          </p>
+        </div>
+      </details>
+    </div>
+
+  </section>
+</main>
+
+<footer class="foot wrap">
+  <p>
+    Live data from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>,
+    fetched at page load. No key, no cache, no stored responses.
+  </p>
+</footer>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

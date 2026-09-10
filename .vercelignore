@@ -1,0 +1,18 @@
+dist
+*.zip
+
+# Not mine to upload
+ShARE TechTask.pdf
+logo.*.svg
+sightseericon*.png
+
+# Not needed to build the site
+NOTE.md
+PRODUCT.md
+Claude outputs
+test.js
+test-fixtures.js
+ui-test.js
+.claude
+.gemini
+.impeccable

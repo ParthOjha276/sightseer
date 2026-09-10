@@ -1,0 +1,19 @@
+# Build output
+dist/
+sightseer-site.zip
+
+# Local tooling and scratch
+.claude/
+.gemini/
+.impeccable/
+PRODUCT.md
+
+# ShARE's own brief. Theirs, not mine to republish.
+ShARE TechTask.pdf
+
+# Reference art belonging to other people. Never ship or commit these.
+logo.*.svg
+sightseericon*.png
+
+# macOS
+.DS_Store
