@@ -1,5 +1,5 @@
 /*
- * engine.js — the judgement layer.
+ * engine.js: the judgement layer.
  *
  * Pure functions only. No DOM, no fetch. Everything here is deterministic:
  * give it the same forecast, it gives you the same verdict. That makes it

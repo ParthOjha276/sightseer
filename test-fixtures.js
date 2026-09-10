@@ -1,5 +1,5 @@
 /*
- * test-fixtures.js — exercises the engine offline against payloads shaped
+ * test-fixtures.js: exercises the engine offline against payloads shaped
  * exactly like Open-Meteo's, covering each climate the verdict logic has to
  * handle plus the degenerate cases.
  *
@@ -76,27 +76,27 @@ function show(title, p) {
     }
   });
   console.log('\nPACKING');
-  r.packing.conditional.forEach(x => console.log(`  • ${x.item} — ${x.why}`));
-  r.packing.base.forEach(x => console.log(`  · ${x.item} — ${x.why}`));
+  r.packing.conditional.forEach(x => console.log(`  • ${x.item}  (${x.why})`));
+  r.packing.base.forEach(x => console.log(`  · ${x.item}  (${x.why})`));
 }
 
-/* 1. A calm trip — every day unremarkable. The hardest case to write well. */
+/* 1. A calm trip, every day unremarkable. The hardest case to write well. */
 show('CALM: mild European autumn, nothing wrong', payload([
   day('2026-09-06'), day('2026-09-07', { tMax: 26, feelsMax: 26 }),
   day('2026-09-08', { tMax: 22, feelsMax: 22 }), day('2026-09-09')
 ]));
 
-/* 2. Afternoon rain block — should produce "mainly 2-6pm". */
+/* 2. Afternoon rain block, should produce "mainly 2-6pm". */
 show('RAIN BLOCK: showers confined to the afternoon', payload([
   day('2026-09-06', { rainProb: 65, rainSum: 6 })
 ], { '2026-09-06': h => (h >= 14 && h <= 17) ? 80 : 10 }));
 
-/* 3. Rain overnight only — the demotion rule should fire. */
+/* 3. Rain overnight only, so the demotion rule should fire. */
 show('OFF-HOURS RAIN: 80% chance, all of it at 3am', payload([
   day('2026-09-06', { rainProb: 80, rainSum: 9 })
 ], { '2026-09-06': h => (h >= 1 && h <= 5) ? 90 : 8 }));
 
-/* 4. Several signals at once — one clear sentence must still come out. */
+/* 4. Several signals at once, and one clear sentence must still come out. */
 show('CONFLICT: hot + wet + high UV + windy on the same day', payload([
   day('2026-09-06', { tMax: 39, feelsMax: 41, tMin: 29, feelsMin: 31,
                       rainProb: 75, rainSum: 12, uv: 10, wind: 45 })
@@ -108,7 +108,7 @@ show('COLD: sub-zero mornings, big day/night swing', payload([
   day('2026-09-07', { tMax: 9, feelsMax: 7, tMin: 1, feelsMin: -2, uv: 2, wind: 12 })
 ]));
 
-/* 6. Heat + UV, no rain — checks the windbreaker/rain-shell dedup does NOT fire. */
+/* 6. Heat + UV, no rain, checking the windbreaker/rain-shell dedup does NOT fire. */
 show('DESERT: heat and punishing sun, dry and windy', payload([
   day('2026-09-06', { tMax: 43, feelsMax: 47, tMin: 31, feelsMin: 33, uv: 11, wind: 30, rainProb: 0, rainSum: 0 }),
   day('2026-09-07', { tMax: 41, feelsMax: 44, tMin: 30, feelsMin: 32, uv: 10, wind: 12, rainProb: 0, rainSum: 0 })

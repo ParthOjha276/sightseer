@@ -1,4 +1,4 @@
-# Sightseer — submission note
+# Sightseer: submission note
 
 **Live:** https://sightseer-gilt.vercel.app/ · **Repo:** https://github.com/ParthOjha276/sightseer
 
@@ -8,8 +8,8 @@
 on foot, and see the sights themselves by walking: 5–8 km across the day, in
 stretches between 9am and 7pm. Stated in the first line of the interface.
 
-I started from "someone who walks the city" and that was wrong — nobody walks a
-city continuously for ten hours. It matters because it decides what bad weather
+I started from "someone who walks the city" and that was wrong, because nobody
+walks a city continuously for ten hours. It matters because it decides what bad weather
 costs: the sights, never the journeys. So advice like *keep the walking short*
 charges the reader for a taxi they were always going to take.
 
@@ -65,8 +65,8 @@ wear*, and the sentence belongs to whichever changes the bigger call.
 weather app flags it like rain at 2pm. Hourly probabilities are read *only* inside
 9am–7pm; if the wettest walking hour is under 40% the day drops a level and says so.
 
-**The walking window.** Inverting that gives the useful answer — the same
-thresholds re-read hour by hour, clipped to daylight, produce the hours worth
+**The walking window.** Inverting that gives the useful answer. The same
+thresholds, re-read hour by hour and clipped to daylight, produce the hours worth
 being outside: *"Clear until 10am. Too hot after that."* Only rain and temperature
 can close an hour, for the reason they win the headline. A flat day gets no line,
 because there is nothing to schedule around.
@@ -81,7 +81,7 @@ cloud cover, wind direction (useless without a route), snowfall depth.
 ## What I would build next
 
 **Something you can actually ask.** The engine already holds what a conversation
-needs — five scored signals a day, the hours that work, the packing reasons — but
+needs (five scored signals a day, the hours that work, the packing reasons) but
 answers only the question it was asked. A chat layer over exactly that data would
 let *"I only care about mornings"* or *"what if I shift a week later"* be answered
 from the same deterministic rules, rather than a language model guessing at
@@ -95,9 +95,9 @@ the engine offline across six climates plus degenerate payloads, `ui-test.js`
 walks all five states headlessly, `test.js` runs against the live API.
 
 AI use was heavy, and it would be misleading to call it a light assist. The
-product thinking is mine — persona, which signals matter, where the thresholds
-sit, what to leave out — worked out by proposing something, being pushed back on,
-and changing my mind. Most of the code was written with AI against those
+product thinking is mine: persona, which signals matter, where the thresholds
+sit, what to leave out. Each was worked out by proposing something, being pushed
+back on, and changing my mind. Most of the code was written with AI against those
 decisions, and I read the output rather than trusting it. The defects worth
 naming are ones I caught that way: a heavy-rain day that said to pick indoor
 things and *walk between them*, sending you into the rain it had just warned

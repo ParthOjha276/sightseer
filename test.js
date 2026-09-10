@@ -1,5 +1,5 @@
 /*
- * test.js — runs the engine against LIVE Open-Meteo data for a spread of
+ * test.js: runs the engine against LIVE Open-Meteo data for a spread of
  * climates, so we can see whether the verdicts read like advice or like noise.
  *
  *   node test.js
@@ -15,7 +15,7 @@ const DAILY = [
 ].join(',');
 
 const CASES = [
-  { city: 'New Delhi' },      // two-word name — the stated rejection trap
+  { city: 'New Delhi' },      // two-word name, the stated rejection trap
   { city: 'Springfield' },    // the ambiguity trap
   { city: 'Reykjavik' },      // cold
   { city: 'Dubai' },          // heat + UV

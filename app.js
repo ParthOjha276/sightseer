@@ -1,5 +1,5 @@
 /*
- * app.js — network, validation, state machine, DOM.
+ * app.js: network, validation, state machine, DOM.
  *
  * All judgement lives in engine.js. This file only decides what to show and
  * when. Five states share one panel: empty, loading, choose, error, results.
@@ -66,7 +66,7 @@
 
   /* ── state switching ───────────────────────────────────────────── */
 
-  // The panel swaps entire screens, so it cannot be a live region — a screen
+  // The panel swaps entire screens, so it cannot be a live region: a screen
   // reader would read every card aloud. One short line carries the change.
   function announce(msg) {
     els.status.textContent = '';
@@ -177,7 +177,7 @@
 
   // Open-Meteo will hand back two places with the same name, region and country.
   // "We never silently pick" is worth nothing if the user cannot tell the options
-  // apart, so each row gets the shortest label that is unique in this set — and
+  // apart, so each row gets the shortest label that is unique in this set, and
   // coordinates only where even the full administrative chain collides.
   function adminChain(p) {
     var seen = {}, out = [];
@@ -490,7 +490,7 @@
 
   // The one authored moment: results rising into place, in reading order.
   // Re-running a search has to replay it, so the class is cycled with a reflow
-  // between — otherwise persistent nodes keep their finished animation.
+  // between, otherwise persistent nodes keep their finished animation.
   function stagger() {
     var i = 0;
     // Cap the stagger so a fourteen-day trip does not take a second to arrive.
@@ -618,7 +618,7 @@
     els.form.addEventListener('submit', runSearch);
 
     // A forecast that failed for a place the user already picked should retry
-    // that place — not walk them back through the city picker.
+    // that place, not walk them back through the city picker.
     els.retry.addEventListener('click', function () {
       if (recovery && recovery.edit) {
         show(els.empty);

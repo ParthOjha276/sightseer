@@ -6,8 +6,8 @@ Trip weather, turned into a decision. Enter a city and your travel dates; get a
 plain-language verdict for each day, the hours of that day worth being outside,
 and one packing list for the whole trip.
 
-Built for the ShARE Tech Vertical recruitment task. The submission write-up —
-thresholds, reasoning, workflow — is in [NOTE.md](NOTE.md).
+Built for the ShARE Tech Vertical recruitment task. The submission write-up,
+covering thresholds, reasoning and workflow, is in [NOTE.md](NOTE.md).
 
 ## Who it advises
 
@@ -31,7 +31,7 @@ Opening `index.html` directly from the filesystem also works.
 ## Deploying
 
 Deployed on Vercel from this repo. `vercel.json` runs `deploy.sh`, which copies
-the five things the site needs into `dist/`, and serves that — so the note, the
+the five things the site needs into `dist/`, and serves that, so the note, the
 tests and the task PDF are never published.
 
 Any static host works the same way: build with `./deploy.sh`, serve `dist/`.
@@ -63,7 +63,7 @@ node test.js             # engine, live API
 ## Data
 
 [Open-Meteo](https://open-meteo.com/) geocoding and forecast APIs. No key, no
-signup. Two requests per search, made at runtime — nothing cached, nothing
+signup. Two requests per search, made at runtime. Nothing cached, nothing
 stored, nothing hardcoded.
 
 - Geocoding returns up to 5 matches; when there is more than one, the app asks

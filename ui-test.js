@@ -1,5 +1,5 @@
 /*
- * ui-test.js — loads index.html in headless Chromium with the Open-Meteo calls
+ * ui-test.js: loads index.html in headless Chromium with the Open-Meteo calls
  * intercepted, walks every state, and screenshots each one.
  *
  *   node ui-test.js
